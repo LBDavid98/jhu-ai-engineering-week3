@@ -589,7 +589,7 @@ Major interactions only: task, prompt used, short summary of the AI response, wh
 - **Task:** Debug expired inventory producing no restock recommendation (RX1 / Part I R6).
 - **Prompt:** Here is the code and the error it produces: _classify_inventory_stock_flags sets expired when days_until_expiry < 0 but does not append a restock reason from that flag; calculate_restock_needs therefore returns [] for Chocolate at 10,000g with expiry_date 2026-01-10 (simulation date 2026-05-10). / Unexpected output: Part I R6 requires flagging expired or expiring soon; expired stock only reached the table if an order failed on it (seed order 3 masks this). test_expired_flag_does_not_add_restock_reason asserted the defect. Explain what is wrong and provide a corrected version with comments.
 - **AI response:** Root cause: the classifier followed Part II Step 5 (out-of-stock / running-low / expiring-soon only) and ignored Part I’s “expired or expiring soon.” Part I governs. Add `"Expired"` at full par (`max(..., PAR_LEVEL_GRAMS)`), compose with other reasons, and replace the test that had locked the defect.
-- **Decision:** **Approved.** Then ran Template 3 RX1.
+- **Decision:** **Approved.** 
 - **Issues found:** A green suite can lock a wrong requirement. Verified `add_failed_order_items_to_restock` still skips names already on the table.
 
 ---
@@ -621,3 +621,13 @@ Major interactions only: task, prompt used, short summary of the AI response, wh
 - **AI response:** Added `_split_orders_by_delivery`, `_summarize_inventory_health` (returns the snapshot plus the four attention lists), and `_render_manager_summary_text` (presentation only). `build_manager_summary` dropped from 162 to 54 lines and is now argument-normalisation, three calls, and the returned dict. The four "needs attention" lines became a loop over `(label, names)` pairs rather than four near-identical appends.
 - **Decision:** **Approved.** Separating rendering from rules matches the Part II §1 point about keeping logic changes and output-format changes apart — the report wording can now change without touching expiry logic.
 - **Issues found:** `show_inventory` / `show_restock` had to stay explicit parameters rather than being inferred from the lists being empty. A caller passing an empty inventory list is not the same as passing `None`: the first prints an empty "Final inventory" block, the second omits the block entirely. Inferring from emptiness would have silently changed output for the empty-list case. Also confirmed the summary's `try/except` around `_days_until_expiry` moved intact into `_summarize_inventory_health`, so the deliberate AC6 asymmetry against `calculate_restock_needs` still holds. Suite **79 OK**; seed-run summary output byte-for-byte unchanged.
+
+---
+
+## 2026-08-17 — Template 3: README
+
+- **Task:** Add a README that explains how to navigate the codebase, what each file is, how the program works, what it reads, what it outputs, and how to read the final run.
+- **Prompt:** Implement Task README: Add a README that explains how to navigate the codebase, what each file is, how the program works, what it reads, what it outputs, and how to read the final run. Use Python. Keep the code simple and add comments explaining each section. Do not implement any other tasks yet.
+- **AI response:** Added `README.md` at the repo root. Sections: navigate the codebase (`seed_data.py` / `main.py` / tests first, then spec and writeup); file-by-file table including `docs/`; all-or-nothing order loop and restock rules; five seed tables as input; console print order (seed tables → processing → updated tables → manager summary); how to read the seed run (ignore seed Restock/Status; use orders 1–5, final inventory/restock/status, and the Kitchen Manager Summary). No simulation code changes.
+- **Decision:** **Approved.**
+- **Issues found:** None. `python3 main.py` and 79 tests were already green; this task is docs only.
