@@ -631,3 +631,13 @@ Major interactions only: task, prompt used, short summary of the AI response, wh
 - **AI response:** Added `README.md` at the repo root. Sections: navigate the codebase (`seed_data.py` / `main.py` / tests first, then spec and writeup); file-by-file table including `docs/`; all-or-nothing order loop and restock rules; five seed tables as input; console print order (seed tables → processing → updated tables → manager summary); how to read the seed run (ignore seed Restock/Status; use orders 1–5, final inventory/restock/status, and the Kitchen Manager Summary). No simulation code changes.
 - **Decision:** **Approved.**
 - **Issues found:** None. `python3 main.py` and 79 tests were already green; this task is docs only.
+
+---
+
+## 2026-08-17 — Final review and acceptance
+
+- **Task:** Record the Decision-Maker’s final review and acceptance of the submitted code.
+- **Prompt:** Document my final review and acceptance of the code in the AI_USAGE_LOG, then push it to github one last time. Good job.
+- **AI response:** Logged this closing decision. No simulation, test, or README changes in this step.
+- **Decision:** **Approved.** I reviewed the code and accept it as the submission: `main.py`, `seed_data.py`, `test_main.py` (79 tests OK), `PROJECT_SPEC.MD`, `WRITTEN_RESPONSE.MD`, `AI_USAGE_LOG.MD`, and `README.md`. Extra credit not taken.
+- **Issues found:** None blocking submit. Student self-check “I understand the code” remains a personal affirmation, not an AI decision.
